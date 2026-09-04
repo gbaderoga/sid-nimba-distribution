@@ -33,3 +33,16 @@ LANGUAGES = {
     "en": {"flag": "us", "name": "English"},
 }
 BABEL_DEFAULT_LOCALE = "fr"
+
+# Locale de formatage numérique (D3) utilisée par tous les graphiques :
+# séparateur de milliers = espace et décimale = virgule (convention
+# française), et affixe de devise = "GNF" en suffixe. Un format de métrique
+# comme "$,.0f" (le "$" signifie ici "utiliser l'affixe de devise de la
+# locale", pas un dollar littéral) rend alors "20 984 000 GNF".
+# Réf. : https://github.com/d3/d3-format/blob/main/README.md#formatLocale
+D3_FORMAT = {
+    "decimal": ",",
+    "thousands": " ",
+    "grouping": [3],
+    "currency": ["", " GNF"],
+}
