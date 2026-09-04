@@ -10,7 +10,7 @@ Comme le sujet l'autorise explicitement, ce contexte est une proposition origina
 
 ## 2. Sources de données et formats
 
-Le SID s'alimente à partir de cinq sources hétérogènes, représentatives de la réalité d'un système d'information d'entreprise où les données ne proviennent jamais d'un unique référentiel :
+Le SID s'alimente à partir de quatre sources hétérogènes, représentatives de la réalité d'un système d'information d'entreprise où les données ne proviennent jamais d'un unique référentiel :
 
 | Source | Format | Contenu | Justification du choix de format |
 |---|---|---|---|
@@ -19,9 +19,8 @@ Le SID s'alimente à partir de cinq sources hétérogènes, représentatives de 
 | `objectifs.xlsx` | Excel | Objectifs commerciaux mensuels par commercial | Document de pilotage RH/direction commerciale, typiquement un tableur |
 | `magasins.json` | JSON | Référentiel des magasins/agences (géolocalisation) | Format naturel pour un export d'une application de gestion de sites (API interne, outil de facilities management) |
 | Base **erp_source** (PostgreSQL) | Base relationnelle | Commerciaux, commandes, lignes de commande, stocks | Représente le système transactionnel (ERP/CRM) de l'entreprise, où sont enregistrées les opérations du quotidien |
-| API de taux de change (optionnelle) | API REST/JSON | Taux EUR → USD/GNF | Module "pour aller plus loin" illustrant l'intégration d'une source externe, avec repli automatique sur un instantané statique en cas d'indisponibilité réseau |
 
-Cette diversité (fichiers plats, tableur, JSON, base OLTP, API) est délibérée : elle oblige le pipeline ETL à mettre en œuvre des connecteurs différenciés et une zone de staging homogénéisante, comme dans un SID réel.
+Cette diversité (fichiers plats, tableur, JSON, base OLTP) est délibérée : elle oblige le pipeline ETL à mettre en œuvre des connecteurs différenciés et une zone de staging homogénéisante, comme dans un SID réel.
 
 ## 3. Choix techniques et justifications
 
@@ -48,13 +47,13 @@ Cette logique est implémentée génériquement dans `etl/load/scd_utils.py` (ca
 
 ### 3.4 ETL en Python/pandas plutôt qu'un outil ETL graphique
 
-Le choix d'un pipeline codé en Python (pandas + SQLAlchemy) plutôt qu'un outil ETL graphique (Talend, etc.) répond à la contrainte du sujet, mais présente aussi des avantages réels : versionnable avec Git au même titre que le reste du projet, testable unitairement, sans dépendance à une licence ou à une plateforme propriétaire, et suffisamment flexible pour gérer les cinq formats de source hétérogènes du projet dans un cadre de code unique et cohérent.
+Le choix d'un pipeline codé en Python (pandas + SQLAlchemy) plutôt qu'un outil ETL graphique (Talend, etc.) répond à la contrainte du sujet, mais présente aussi des avantages réels : versionnable avec Git au même titre que le reste du projet, testable unitairement, sans dépendance à une licence ou à une plateforme propriétaire, et suffisamment flexible pour gérer les quatre formats de source hétérogènes du projet dans un cadre de code unique et cohérent.
 
 Le pipeline suit une architecture **ELT-friendly en 4 étapes** systématiques : extraction brute vers une zone de **staging** (aucune transformation), puis chargement des **dimensions**, puis chargement des **faits** (qui résolvent les clés de substitution via les dimensions déjà chargées), puis **contrôles qualité**. Chaque étape est idempotente (rejouable sans dupliquer les données), ce qui a été vérifié expérimentalement.
 
 ### 3.5 Apache Airflow pour l'orchestration
 
-Airflow orchestre le pipeline quotidien (`etl/dags/dag_sid_nimba_distribution.py`) en respectant les dépendances métier réelles : les 8 extractions sont indépendantes et parallélisables, les 4 chargements de dimensions le sont également, mais doivent impérativement précéder les chargements de faits (qui ont besoin des clés de substitution), eux-mêmes suivis des contrôles qualité. Cette structure est exprimée avec `cross_downstream` (dépendances many-to-many entre étapes), plus fidèle à la réalité du pipeline qu'un simple enchaînement linéaire.
+Airflow orchestre le pipeline quotidien (`etl/dags/dag_sid_nimba_distribution.py`) en respectant les dépendances métier réelles : les 7 extractions sont indépendantes et parallélisables, les 4 chargements de dimensions le sont également, mais doivent impérativement précéder les chargements de faits (qui ont besoin des clés de substitution), eux-mêmes suivis des contrôles qualité. Cette structure est exprimée avec `cross_downstream` (dépendances many-to-many entre étapes), plus fidèle à la réalité du pipeline qu'un simple enchaînement linéaire.
 
 ### 3.6 Apache Superset pour la restitution
 
@@ -76,14 +75,13 @@ L'ensemble de la stack (PostgreSQL, Airflow, Superset) est conteneurisé via Doc
 | Comportement client | `mart.v_comportement_client` (segmentation RFM : Récence/Fréquence/Montant) |
 | Atteinte des objectifs | `mart.v_atteinte_objectifs` (objectif vs réalisé, taux d'atteinte) |
 | *(Bonus)* Situation des stocks | `mart.v_situation_stock` (ruptures, valorisation) |
-| *(Bonus)* Taux de change multi-devises | `dwh.fact_taux_change` (module API externe) |
 
 ## 5. Tests et validation effectués
 
 Contrainte technique propre à l'environnement de développement utilisé pour ce projet : l'accès aux registres d'images Docker (Docker Hub, ghcr.io, etc.) était bloqué par la politique réseau du bac à sable dans lequel ce projet a été construit, empêchant l'exécution de `docker compose up` à cet endroit précis. Pour autant, **l'intégralité de la logique applicative a été testée en conditions réelles**, avec les mêmes versions logicielles que celles utilisées par les images Docker du projet :
 
 - **PostgreSQL** installé nativement et utilisé pour dérouler les scripts SQL (`sql/`), générer un jeu de données (8 magasins, 8 000 commandes, ~15 100 lignes de vente, 15 600 relevés de stock) et exécuter le pipeline ETL complet de bout en bout, y compris un test explicite de la mécanique SCD2 (modification d'un client, vérification de la double version en base) ;
-- **Apache Airflow 2.10.4** installé via pip et utilisé pour valider le parsing du DAG (`airflow dags list-import-errors`) puis pour l'**exécuter réellement** (`airflow dags test`), les 17 tâches se terminant toutes en succès dans le bon ordre de dépendance ;
+- **Apache Airflow 2.10.4** installé via pip et utilisé pour valider le parsing du DAG (`airflow dags list-import-errors`) puis pour l'**exécuter réellement** (`airflow dags test`), les 15 tâches se terminant toutes en succès dans le bon ordre de dépendance ;
 - **Apache Superset 4.1.1** installé via pip, connecté à la base `dwh` locale ; le script `dashboard/provision_dashboard.py` a été exécuté contre une instance Superset réelle, créant effectivement la connexion, les 7 datasets, les 10 graphiques et le tableau de bord, avec **capture d'écran du rendu final** (`docs/img/dashboard_superset.png`) confirmant que chaque graphique restitue des données cohérentes.
 
 Le `docker-compose.yml` et les `Dockerfile` associés ont été validés structurellement (`docker compose config`) et suivent les pratiques officielles (image Airflow étendue via fichier de contraintes officiel, image Superset étendue par une configuration applicative standard). Leur exécution complète nécessite simplement un environnement disposant d'un accès normal aux registres Docker.
@@ -91,6 +89,5 @@ Le `docker-compose.yml` et les `Dockerfile` associés ont été validés structu
 ## 6. Limites et pistes d'amélioration
 
 - La détection de changement SCD2 est basée sur une empreinte de tous les attributs suivis ; une évolution possible serait de ne déclencher une nouvelle version que sur un sous-ensemble d'attributs "sensibles".
-- Le module de taux de change utilise une API publique simple ; en production, un fournisseur de données de change avec SLA serait préférable.
 - La volumétrie du jeu de données (~15 100 lignes de vente) reste modeste ; l'architecture (index, vues, staging) est conçue pour scaler à des volumes bien supérieurs sans changement structurel.
 - Un `docker-compose.override.yml` de production ajouterait un reverse-proxy TLS, une politique de sauvegarde automatisée de `pgdata`, et remplacerait le `LocalExecutor` d'Airflow par du `CeleryExecutor` pour la scalabilité horizontale.

@@ -20,7 +20,6 @@ x-airflow-common: &airflow-common
     POSTGRES_PORT: 5432
     POSTGRES_DB_ERP: ${POSTGRES_DB_ERP}
     POSTGRES_DB_DWH: ${POSTGRES_DB_DWH}
-    EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL}
   volumes:
     - ./etl/dags:/opt/airflow/dags
     - airflow_logs:/opt/airflow/logs
@@ -65,7 +64,6 @@ services:
       POSTGRES_PORT: 5432
       POSTGRES_DB_ERP: ${POSTGRES_DB_ERP}
       POSTGRES_DB_DWH: ${POSTGRES_DB_DWH}
-      EXCHANGE_RATE_API_URL: ${EXCHANGE_RATE_API_URL}
       PYTHONPATH: /app
     volumes:
       - ./:/app

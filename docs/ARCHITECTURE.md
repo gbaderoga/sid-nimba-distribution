@@ -8,7 +8,7 @@ Pour comprendre le principe en un coup d'œil : les données brutes (fichiers et
 flowchart LR
     SRC["Sources de données
     CSV · Excel · JSON
-    Base ERP · API taux de change"]
+    Base ERP"]
     ETL["Pipeline ETL
     Python / pandas
     (extraction -> transformation -> chargement)"]
@@ -46,7 +46,6 @@ flowchart LR
         XLS2["objectifs.xlsx\n(Excel)"]
         JSON["magasins.json\n(JSON)"]
         ERP[("erp_source\nPostgreSQL (OLTP)\ncommerciaux / commandes /\nlignes_commande / stocks")]
-        API["API externe\ntaux de change\n(optionnel)"]
     end
 
     subgraph ETL["Pipeline ETL — Python / pandas"]
@@ -65,7 +64,7 @@ flowchart LR
     subgraph DWH["Data Warehouse — schéma en étoile"]
         direction TB
         DIMS[("Dimensions\ndim_date, dim_client*, dim_produit*,\ndim_magasin, dim_commercial, dim_canal_vente")]
-        FACTS[("Faits\nfact_ventes, fact_stock,\nfact_objectifs, fact_taux_change")]
+        FACTS[("Faits\nfact_ventes, fact_stock,\nfact_objectifs")]
         MART[("Vues mart.*\n(1 vue par indicateur)")]
     end
 
@@ -78,7 +77,6 @@ flowchart LR
     XLS2 --> EXTRACT
     JSON --> EXTRACT
     ERP --> EXTRACT
-    API --> EXTRACT
 
     EXTRACT --> STAGING
     STAGING --> LOADDIM --> DIMS
@@ -137,7 +135,7 @@ flowchart TB
 
 | Composant | Rôle | Technologie |
 |---|---|---|
-| Sources | Systèmes producteurs de données (fichiers plats, ERP, API) | CSV, Excel, JSON, PostgreSQL (OLTP), API REST |
+| Sources | Systèmes producteurs de données (fichiers plats, ERP) | CSV, Excel, JSON, PostgreSQL (OLTP) |
 | ETL | Extraction, transformation, chargement | Python 3.11, pandas, SQLAlchemy |
 | Orchestrateur | Planification, dépendances, reprise sur erreur | Apache Airflow (LocalExecutor) |
 | Entrepôt de données | Stockage staging + modèle en étoile + vues de restitution | PostgreSQL 16 |

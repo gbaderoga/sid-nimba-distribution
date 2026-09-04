@@ -21,8 +21,6 @@ erDiagram
     DIM_COMMERCIAL ||--o{ FACT_OBJECTIFS : "commercial_sk"
     DIM_MAGASIN ||--o{ FACT_OBJECTIFS : "magasin_sk"
 
-    DIM_DATE ||--o{ FACT_TAUX_CHANGE : "date_id"
-
     FACT_VENTES {
         bigint vente_sk PK
         int date_id FK
@@ -55,13 +53,6 @@ erDiagram
         bigint magasin_sk FK
         numeric objectif_ca
         int objectif_quantite
-    }
-
-    FACT_TAUX_CHANGE {
-        int date_id FK
-        varchar devise_source
-        varchar devise_cible
-        numeric taux
     }
 
     DIM_DATE {
@@ -122,7 +113,6 @@ erDiagram
 | `fact_ventes` | Une ligne de commande (un produit, dans une commande, à une date, un magasin, un commercial) | `quantite`, `montant_brut`, `montant_remise`, `montant_net` (= CA), `cout_total`, `marge` |
 | `fact_stock` | Un relevé de stock pour un produit, dans un magasin, à une date donnée | `quantite_stock`, `valeur_stock`, `en_rupture` |
 | `fact_objectifs` | Un objectif mensuel pour un commercial (rattaché à un magasin) | `objectif_ca`, `objectif_quantite` |
-| `fact_taux_change` | Un taux de change pour une paire de devises, à une date | `taux` |
 
 ## Stratégie SCD par dimension
 

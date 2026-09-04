@@ -3,7 +3,7 @@ DAG Airflow - Système d'Information Décisionnel Nimba Distribution
 ====================================================================
 Orchestre le pipeline ETL quotidien :
 
-    extraction (8 sources, en parallèle)
+    extraction (7 sources, en parallèle)
         -> chargement des dimensions (SCD1 / SCD2, en parallèle)
             -> chargement des faits (en parallèle)
                 -> contrôles qualité
@@ -88,11 +88,6 @@ def sid_nimba_distribution_daily():
         from etl.extract.extract_erp import extract_stocks as fn
         return fn(_batch_id())
 
-    @task
-    def extract_taux_change():
-        from etl.extract.extract_api_taux_change import extract_taux_change as fn
-        return fn(_batch_id())
-
     # ------------------------------------------------------------------
     # 2. Chargement des dimensions (staging -> dwh)
     # ------------------------------------------------------------------
@@ -134,11 +129,6 @@ def sid_nimba_distribution_daily():
         from etl.load.load_facts import load_fact_objectifs as fn
         return fn(_batch_id())
 
-    @task
-    def load_fact_taux_change():
-        from etl.load.load_facts import load_fact_taux_change as fn
-        return fn(_batch_id())
-
     # ------------------------------------------------------------------
     # 4. Contrôles qualité
     # ------------------------------------------------------------------
@@ -149,12 +139,12 @@ def sid_nimba_distribution_daily():
 
     extraction = [
         extract_clients(), extract_produits(), extract_objectifs(), extract_magasins(),
-        extract_commerciaux(), extract_ventes(), extract_stocks(), extract_taux_change(),
+        extract_commerciaux(), extract_ventes(), extract_stocks(),
     ]
 
     dims = [load_dim_magasin(), load_dim_commercial(), load_dim_client(), load_dim_produit()]
 
-    facts = [load_fact_ventes(), load_fact_stock(), load_fact_objectifs(), load_fact_taux_change()]
+    facts = [load_fact_ventes(), load_fact_stock(), load_fact_objectifs()]
 
     quality = quality_checks()
 

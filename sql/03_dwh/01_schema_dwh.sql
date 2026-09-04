@@ -206,20 +206,6 @@ CREATE TABLE IF NOT EXISTS dwh.fact_objectifs (
 CREATE INDEX IF NOT EXISTS idx_fact_objectifs_date ON dwh.fact_objectifs(date_id);
 CREATE INDEX IF NOT EXISTS idx_fact_objectifs_commercial ON dwh.fact_objectifs(commercial_sk);
 
--- ----------------------------------------------------------------------------
--- dim_taux_change : dimension/fait de référence pour le module optionnel
--- (conversion GNF / EUR / USD), alimentée par API externe
--- ----------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS dwh.fact_taux_change (
-    date_id                  INTEGER NOT NULL REFERENCES dwh.dim_date(date_id),
-    devise_source              VARCHAR(3) NOT NULL,
-    devise_cible                 VARCHAR(3) NOT NULL,
-    taux                          NUMERIC(18,6) NOT NULL,
-    _batch_id                      TEXT,
-    _loaded_at                      TIMESTAMP DEFAULT now(),
-    PRIMARY KEY (date_id, devise_source, devise_cible)
-);
-
 COMMENT ON SCHEMA dwh IS 'Modèle dimensionnel (schéma en étoile) de Nimba Distribution.';
 COMMENT ON TABLE dwh.fact_ventes IS 'Table de faits principale. Grain : une ligne de commande.';
 COMMENT ON TABLE dwh.fact_stock IS 'Table de faits de stock. Grain : relevé quotidien par magasin et par produit.';

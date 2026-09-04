@@ -12,13 +12,12 @@ import argparse
 import datetime
 import sys
 
-from etl.extract.extract_api_taux_change import extract_taux_change
 from etl.extract.extract_csv import extract_clients
 from etl.extract.extract_erp import extract_commerciaux, extract_stocks, extract_ventes
 from etl.extract.extract_excel import extract_objectifs, extract_produits
 from etl.extract.extract_json import extract_magasins
 from etl.load.load_dimensions import load_dim_client, load_dim_commercial, load_dim_magasin, load_dim_produit
-from etl.load.load_facts import load_fact_objectifs, load_fact_stock, load_fact_taux_change, load_fact_ventes
+from etl.load.load_facts import load_fact_objectifs, load_fact_stock, load_fact_ventes
 from etl.utils.data_quality import run_data_quality_checks
 from etl.utils.logging_conf import get_logger
 
@@ -38,7 +37,6 @@ def run_extraction(batch_id: str):
     extract_commerciaux(batch_id)
     extract_ventes(batch_id)
     extract_stocks(batch_id)
-    extract_taux_change(batch_id)
 
 
 def run_load_dimensions(effective_date=None):
@@ -54,7 +52,6 @@ def run_load_facts(batch_id: str):
     load_fact_ventes(batch_id)
     load_fact_stock(batch_id)
     load_fact_objectifs(batch_id)
-    load_fact_taux_change(batch_id)
 
 
 def run_quality_checks():

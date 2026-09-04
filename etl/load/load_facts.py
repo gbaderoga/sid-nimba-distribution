@@ -138,31 +138,8 @@ def load_fact_objectifs(batch_id: str) -> int:
     return upsert_fact(engine, "fact_objectifs", "objectif_sk", ["date_id", "commercial_sk"], out, batch_id)
 
 
-def load_fact_taux_change(batch_id: str) -> int:
-    engine = get_dwh_engine()
-
-    taux = pd.read_sql("SELECT * FROM staging.stg_taux_change", engine)
-    if len(taux) == 0:
-        logger.warning("fact_taux_change : staging vide, rien à charger")
-        return 0
-
-    dim_date = _dim_date_lookup(engine)
-
-    df = taux.copy()
-    df["date_only"] = pd.to_datetime(df["date_taux"], errors="coerce").dt.date
-    df["taux"] = pd.to_numeric(df["taux"], errors="coerce")
-
-    df = df.merge(dim_date, left_on="date_only", right_on="date_complete", how="inner")
-
-    out = df[["date_id", "devise_source", "devise_cible", "taux"]].copy()
-    out["date_id"] = out["date_id"].astype(int)
-
-    return upsert_fact(engine, "fact_taux_change", None, ["date_id", "devise_source", "devise_cible"], out, batch_id)
-
-
 if __name__ == "__main__":
     bid = datetime.datetime.now().strftime("manual_%Y%m%d%H%M%S")
     print("fact_ventes:", load_fact_ventes(bid))
     print("fact_stock:", load_fact_stock(bid))
     print("fact_objectifs:", load_fact_objectifs(bid))
-    print("fact_taux_change:", load_fact_taux_change(bid))

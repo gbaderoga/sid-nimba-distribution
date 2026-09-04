@@ -34,7 +34,7 @@ sid-nimba-distribution/
 │   ├── 03_dwh/                    #   modèle en étoile (dimensions + faits) + seeds
 │   └── 04_views/                   #   vues de restitution (schéma mart, 1/indicateur)
 ├── etl/                          # Pipeline ETL (package Python)
-│   ├── extract/                  #   1 module par source (CSV, Excel, JSON, ERP, API)
+│   ├── extract/                  #   1 module par source (CSV, Excel, JSON, ERP)
 │   ├── load/                      #   chargement dimensions (SCD1/2) + faits
 │   ├── utils/                      #   connexions DB, logging, contrôles qualité
 │   ├── dags/                        #   DAG Airflow (orchestration du pipeline)
@@ -124,7 +124,7 @@ Le détail de calcul de chaque indicateur est documenté dans `sql/04_views/01_v
 
 Ce projet a été développé et testé de bout en bout avant livraison (voir le détail dans `docs/RAPPORT_SYNTHESE.md`, section 5) :
 - pipeline ETL exécuté intégralement sur une instance PostgreSQL réelle, avec vérification de l'idempotence et de la mécanique SCD Type 2 (historisation) ;
-- DAG Airflow exécuté réellement (`airflow dags test`), 17 tâches en succès, dépendances respectées ;
+- DAG Airflow exécuté réellement (`airflow dags test`), 15 tâches en succès, dépendances respectées ;
 - tableau de bord Superset provisionné et rendu réellement (capture d'écran ci-dessus), les 10 graphiques restituant des données cohérentes.
 
 Le déploiement Docker Compose lui-même a été validé structurellement (`docker compose config`) ; son exécution complète (`docker compose up`) nécessite un accès standard aux registres d'images Docker.
@@ -132,10 +132,6 @@ Le déploiement Docker Compose lui-même a été validé structurellement (`dock
 ## Données d'exemple
 
 Les fichiers sources complets (`data/raw/`) sont générés par `data/scripts/generate_sample_data.py` (voir "Démarrage rapide" ci-dessus) et ne sont pas versionnés (volumineux, régénérables à volonté, y compris avec un jeu de données plus ou moins grand via ses options `--nb-clients`, `--nb-produits`, `--annees`, `--nb-lignes-ventes`). Un aperçu figé de chaque source (quelques dizaines de lignes) est en revanche versionné dans `data/samples/` afin de pouvoir consulter le format exact des données sans exécuter le générateur.
-
-## Module optionnel : API externe
-
-`etl/extract/extract_api_taux_change.py` interroge une API publique de taux de change (EUR → USD/GNF) et alimente `dwh.fact_taux_change`. En l'absence d'accès réseau sortant vers cette API, le module bascule automatiquement sur l'instantané statique `data/raw/json/taux_change_fallback.json` sans faire échouer le pipeline (comportement observé et validé lors des tests).
 
 ## Auteur
 

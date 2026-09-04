@@ -126,15 +126,4 @@ CREATE TABLE IF NOT EXISTS staging.stg_stocks (
     _loaded_at              TIMESTAMP DEFAULT now()
 );
 
--- Source API externe (optionnelle) : taux de change
-CREATE TABLE IF NOT EXISTS staging.stg_taux_change (
-    date_taux              TEXT,
-    devise_source          TEXT,
-    devise_cible            TEXT,
-    taux                    TEXT,
-    _batch_id                TEXT,
-    _source_file              TEXT,
-    _loaded_at                TIMESTAMP DEFAULT now()
-);
-
 COMMENT ON SCHEMA staging IS 'Zone de staging du Data Warehouse : dépôt brut des données sources avant transformation.';

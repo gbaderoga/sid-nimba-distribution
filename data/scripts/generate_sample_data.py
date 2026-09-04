@@ -8,7 +8,6 @@
 #   - data/raw/excel/produits.xlsx              (source Excel)
 #   - data/raw/excel/objectifs.xlsx              (source Excel)
 #   - data/raw/json/magasins.json                 (source JSON)
-#   - data/raw/json/taux_change_fallback.json      (repli pour le module API)
 #   - base "erp_source" (Postgres) : commerciaux, commandes, lignes_commande,
 #     stocks                                        (source base relationnelle)
 #
@@ -259,13 +258,6 @@ def generate_stocks(magasins, produits, date_debut, date_fin):
     return pd.DataFrame(rows)
 
 
-def generate_taux_change_fallback():
-    return {
-        "base": "EUR",
-        "date": date.today().isoformat(),
-        "rates": {"USD": 1.08, "GNF": 9350.0},
-        "note": "Jeu de secours statique utilisé lorsque l'API externe n'est pas joignable (voir etl/extract/extract_api_taux_change.py).",
-    }
 
 
 def load_erp_tables(commerciaux, commandes, lignes, stocks):
@@ -358,9 +350,6 @@ def main():
     magasins_json = json.loads(magasins.to_json(orient="records"))
     with open(os.path.join(RAW_JSON, "magasins.json"), "w", encoding="utf-8") as f:
         json.dump({"magasins": magasins_json}, f, ensure_ascii=False, indent=2)
-
-    with open(os.path.join(RAW_JSON, "taux_change_fallback.json"), "w", encoding="utf-8") as f:
-        json.dump(generate_taux_change_fallback(), f, ensure_ascii=False, indent=2)
 
     nb_com, nb_cmd, nb_lig, nb_stk = load_erp_tables(commerciaux, commandes, lignes, stocks)
 
