@@ -1,38 +1,5 @@
 # Schéma d'architecture — SID Nimba Distribution
 
-## Vue simplifiée
-
-Pour comprendre le principe en un coup d'œil : les données brutes (fichiers et bases sources) sont collectées et mises en forme par un pipeline ETL, stockées dans un Data Warehouse organisé en schéma en étoile, puis restituées sous forme de tableau de bord. L'ensemble est rejoué automatiquement chaque jour par Airflow.
-
-```mermaid
-flowchart LR
-    SRC["Sources de données
-    CSV · Excel · JSON
-    Base ERP"]
-    ETL["Pipeline ETL
-    Python / pandas
-    (extraction -> transformation -> chargement)"]
-    DWH[("Data Warehouse
-    PostgreSQL
-    schéma en étoile")]
-    BI["Tableau de bord
-    Apache Superset
-    Pilotage commercial"]
-    AIRFLOW["Orchestration
-    Apache Airflow
-    (DAG quotidien, 03h00)"]
-
-    SRC --> ETL --> DWH --> BI
-    AIRFLOW -. orchestre chaque étape .-> ETL
-
-    classDef store fill:#e8f0fe,stroke:#4285f4,stroke-width:1px;
-    classDef step fill:#fff8e1,stroke:#f9a825,stroke-width:1px;
-    classDef orch fill:#f3e5f5,stroke:#8e24aa,stroke-width:1px,stroke-dasharray: 3 3;
-    class SRC,DWH,BI store;
-    class ETL step;
-    class AIRFLOW orch;
-```
-
 ## Vue détaillée
 
 La vue ci-dessous détaille chaque étape technique du flux (staging, chargement des dimensions/faits, contrôles qualité, vues de restitution) :
