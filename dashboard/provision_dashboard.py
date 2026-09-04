@@ -107,13 +107,22 @@ def ensure_database(client: SupersetClient) -> int:
 def ensure_dataset(client: SupersetClient, database_id: int, table_name: str, schema: str = "mart") -> dict:
     existing = client.find_one("dataset", "table_name", table_name)
     if existing:
-        print(f"[OK] Dataset {table_name} déjà présent (id={existing['id']})")
-        full = client.get(f"/api/v1/dataset/{existing['id']}")["result"]
-        return full
-    payload = {"database": database_id, "schema": schema, "table_name": table_name}
-    result = client.post("/api/v1/dataset/", json=payload)
-    dataset_id = result["id"]
-    print(f"[+] Dataset {table_name} créé (id={dataset_id})")
+        dataset_id = existing["id"]
+        print(f"[OK] Dataset {table_name} déjà présent (id={dataset_id})")
+    else:
+        payload = {"database": database_id, "schema": schema, "table_name": table_name}
+        result = client.post("/api/v1/dataset/", json=payload)
+        dataset_id = result["id"]
+        print(f"[+] Dataset {table_name} créé (id={dataset_id})")
+
+    # Resynchronise les colonnes depuis la vue SQL source (schéma mart) : sans
+    # cet appel, un dataset déjà enregistré garde la liste de colonnes qu'il
+    # avait au moment de sa création et ignore toute colonne ajoutée depuis à
+    # la vue (ex. les colonnes "*_k_gnf"), provoquant une erreur "Columns
+    # missing in dataset" dès qu'un graphique tente de les utiliser.
+    client.put(f"/api/v1/dataset/{dataset_id}/refresh")
+    print(f"    -> colonnes resynchronisées pour {table_name}")
+
     full = client.get(f"/api/v1/dataset/{dataset_id}")["result"]
     return full
 
