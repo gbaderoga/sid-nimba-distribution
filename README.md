@@ -1,4 +1,4 @@
-# SID Nimba Distribution — Système d'Information Décisionnel
+# Nimba Distribution — Système d'Information Décisionnel
 
 Système d'Information Décisionnel complet, reposant sur un Data Warehouse PostgreSQL, pour une entreprise fictive de distribution (**Nimba Distribution**, réseau de 8 magasins/agences en Guinée).
 
