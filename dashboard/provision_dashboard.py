@@ -236,6 +236,9 @@ def main():
     # un dollar littéral : c'est le symbole de spécification D3 qui indique
     # "utiliser le préfixe/suffixe de devise de la locale courante".
     FMT_GNF = "$,.0f"
+    # Idem mais pour un simple compte (quantités, nb de commandes...) : même
+    # séparateur de milliers (espace, via D3_FORMAT), sans le suffixe GNF.
+    FMT_ENTIER = ",.0f"
 
     # 1. KPI global : CA total
     chart_ids.append(ensure_chart(
@@ -315,6 +318,8 @@ def main():
             "order_by_cols": ['["sum__chiffre_affaires", false]'],
             "column_config": {
                 "CA": {"d3NumberFormat": FMT_GNF},
+                # pas un montant : séparateur de milliers seul, sans suffixe GNF
+                "Nb commandes": {"d3NumberFormat": FMT_ENTIER},
             },
         },
     ))
