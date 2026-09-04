@@ -4,6 +4,15 @@
 -- Ces vues encapsulent la logique métier des indicateurs demandés et servent
 -- de datasets directement exploitables par Apache Superset. Elles s'appuient
 -- exclusivement sur le schéma dwh (facts + dimensions courantes).
+--
+-- Convention d'affichage monétaire : chaque montant en GNF (franc guinéen)
+-- est dupliqué dans une colonne "*_k_gnf" (valeur divisée par 1000, arrondie
+-- à 1 décimale) afin de permettre un affichage "en milliers de GNF" dans
+-- Superset sans reformater côté graphique. Les colonnes d'origine restent
+-- disponibles pour tout calcul nécessitant le montant exact (ex. taux
+-- d'atteinte d'objectif). Les nouvelles colonnes sont ajoutées en fin de
+-- liste SELECT : PostgreSQL interdit à CREATE OR REPLACE VIEW de réordonner
+-- ou d'insérer une colonne au milieu d'une vue existante.
 -- ============================================================================
 
 CREATE SCHEMA IF NOT EXISTS mart;
@@ -82,7 +91,10 @@ SELECT
     ROUND(
         100.0 * (SUM(montant_net) - LAG(SUM(montant_net)) OVER (ORDER BY annee_mois))
         / NULLIF(LAG(SUM(montant_net)) OVER (ORDER BY annee_mois), 0)
-    , 2) AS evolution_pct_mois_precedent
+    , 2) AS evolution_pct_mois_precedent,
+    -- affichage "en milliers de GNF"
+    ROUND(SUM(montant_net) / 1000.0, 1)       AS chiffre_affaires_k_gnf,
+    ROUND(SUM(marge) / 1000.0, 1)             AS marge_totale_k_gnf
 FROM mart.v_ventes_detail
 GROUP BY annee, mois, annee_mois
 ORDER BY annee_mois;
@@ -102,7 +114,10 @@ SELECT
     ROUND(100.0 * SUM(marge) / NULLIF(SUM(montant_net), 0), 2) AS taux_marge_pct,
     SUM(quantite)                        AS quantite_vendue,
     COUNT(DISTINCT numero_commande)      AS nb_commandes,
-    RANK() OVER (ORDER BY SUM(montant_net) DESC) AS rang_ca
+    RANK() OVER (ORDER BY SUM(montant_net) DESC) AS rang_ca,
+    -- affichage "en milliers de GNF"
+    ROUND(SUM(montant_net) / 1000.0, 1) AS chiffre_affaires_k_gnf,
+    ROUND(SUM(marge) / 1000.0, 1)       AS marge_totale_k_gnf
 FROM mart.v_ventes_detail
 GROUP BY produit_id, nom_produit, categorie, sous_categorie, marque;
 
@@ -121,7 +136,10 @@ SELECT
     SUM(marge)                             AS marge_totale,
     SUM(quantite)                          AS quantite_vendue,
     COUNT(DISTINCT numero_commande)        AS nb_commandes,
-    COUNT(DISTINCT client_id)              AS nb_clients_distincts
+    COUNT(DISTINCT client_id)              AS nb_clients_distincts,
+    -- affichage "en milliers de GNF"
+    ROUND(SUM(montant_net) / 1000.0, 1)    AS chiffre_affaires_k_gnf,
+    ROUND(SUM(marge) / 1000.0, 1)          AS marge_totale_k_gnf
 FROM mart.v_ventes_detail
 GROUP BY magasin_pays, magasin_region, magasin_ville, magasin_id, nom_magasin, type_magasin;
 
@@ -139,7 +157,10 @@ SELECT
     MAX(o.objectif_ca)                        AS objectif_ca,
     MAX(o.objectif_quantite)                  AS objectif_quantite,
     ROUND(100.0 * SUM(v.montant_net) / NULLIF(MAX(o.objectif_ca), 0), 2)       AS taux_atteinte_ca_pct,
-    ROUND(100.0 * SUM(v.quantite) / NULLIF(MAX(o.objectif_quantite), 0), 2)    AS taux_atteinte_quantite_pct
+    ROUND(100.0 * SUM(v.quantite) / NULLIF(MAX(o.objectif_quantite), 0), 2)    AS taux_atteinte_quantite_pct,
+    -- affichage "en milliers de GNF"
+    ROUND(SUM(v.montant_net) / 1000.0, 1)    AS ca_realise_k_gnf,
+    ROUND(MAX(o.objectif_ca) / 1000.0, 1)     AS objectif_ca_k_gnf
 FROM mart.v_ventes_detail v
 LEFT JOIN dwh.fact_objectifs o
     ON o.commercial_sk = v.commercial_sk
@@ -157,7 +178,10 @@ SELECT
     m.region,
     SUM(o.objectif_ca)                          AS objectif_ca,
     COALESCE(SUM(v.ca_reel), 0)                  AS ca_realise,
-    ROUND(100.0 * COALESCE(SUM(v.ca_reel), 0) / NULLIF(SUM(o.objectif_ca), 0), 2) AS taux_atteinte_pct
+    ROUND(100.0 * COALESCE(SUM(v.ca_reel), 0) / NULLIF(SUM(o.objectif_ca), 0), 2) AS taux_atteinte_pct,
+    -- affichage "en milliers de GNF"
+    ROUND(SUM(o.objectif_ca) / 1000.0, 1)       AS objectif_ca_k_gnf,
+    ROUND(COALESCE(SUM(v.ca_reel), 0) / 1000.0, 1) AS ca_realise_k_gnf
 FROM dwh.fact_objectifs o
 JOIN dwh.dim_date d      ON d.date_id = o.date_id
 JOIN dwh.dim_magasin m   ON m.magasin_sk = o.magasin_sk
@@ -198,7 +222,10 @@ SELECT
         WHEN NTILE(5) OVER (ORDER BY recence_jours DESC) <= 2 THEN 'Client à risque de désengagement'
         WHEN NTILE(5) OVER (ORDER BY frequence_commandes ASC) <= 2 THEN 'Client occasionnel'
         ELSE 'Client régulier'
-    END AS segment_comportemental
+    END AS segment_comportemental,
+    -- affichage "en milliers de GNF" (calculée ici, en toute fin de liste, pour
+    -- ne pas décaler la position des colonnes issues de agg.*)
+    ROUND(montant_total / 1000.0, 1)                 AS montant_total_k_gnf
 FROM agg;
 
 -- ----------------------------------------------------------------------------
@@ -216,7 +243,9 @@ SELECT
     s.quantite_stock,
     s.seuil_alerte,
     s.valeur_stock,
-    s.en_rupture
+    s.en_rupture,
+    -- affichage "en milliers de GNF"
+    ROUND(s.valeur_stock / 1000.0, 1)      AS valeur_stock_k_gnf
 FROM dwh.fact_stock s
 JOIN dwh.dim_date d     ON d.date_id = s.date_id
 JOIN dwh.dim_magasin m  ON m.magasin_sk = s.magasin_sk

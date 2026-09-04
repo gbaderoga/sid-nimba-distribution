@@ -221,14 +221,22 @@ def main():
 
     chart_ids = []
 
+    # Format numérique fixe (séparateur de milliers, 0 décimale) pour les
+    # montants déjà exprimés en milliers de GNF : évite que Superset applique
+    # en plus son propre arrondi adaptatif (k/M), ce qui donnerait par ex.
+    # "2.1k" pour une valeur qui est déjà "2 119" (milliers de GNF).
+    FMT_MILLIERS_GNF = ",.0f"
+
     # 1. KPI global : CA total
     chart_ids.append(ensure_chart(
         client, "KPI - Chiffre d'affaires total", ds_ca, "big_number_total",
         {
-            "metric": {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                       "aggregate": "SUM", "label": "CA total"},
+            "metric": {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                       "aggregate": "SUM", "label": "CA total (milliers GNF)"},
             "adhoc_filters": [],
             "header_font_size": 0.4, "subheader_font_size": 0.15,
+            "subheader": "milliers de GNF",
+            "y_axis_format": FMT_MILLIERS_GNF,
         },
     ))
 
@@ -237,10 +245,11 @@ def main():
         client, "Évolution mensuelle du chiffre d'affaires", ds_ca, "echarts_timeseries_line",
         {
             "x_axis": "annee_mois",
-            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                         "aggregate": "SUM", "label": "CA"}],
+            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                         "aggregate": "SUM", "label": "CA (milliers GNF)"}],
             "groupby": [], "adhoc_filters": [], "row_limit": 1000,
             "x_axis_sort_asc": True, "x_axis_time_format": "smart_date",
+            "y_axis_format": FMT_MILLIERS_GNF,
         },
     ))
 
@@ -249,10 +258,11 @@ def main():
         client, "Top 10 produits par chiffre d'affaires", ds_produit, "dist_bar",
         {
             "groupby": ["nom_produit"],
-            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                         "aggregate": "SUM", "label": "CA"}],
+            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                         "aggregate": "SUM", "label": "CA (milliers GNF)"}],
             "adhoc_filters": [], "row_limit": 10,
-            "order_by_cols": ['["sum__chiffre_affaires", false]'],
+            "order_by_cols": ['["sum__chiffre_affaires_k_gnf", false]'],
+            "y_axis_format": FMT_MILLIERS_GNF,
         },
     ))
 
@@ -261,9 +271,10 @@ def main():
         client, "Répartition du CA par catégorie de produit", ds_produit, "pie",
         {
             "groupby": ["categorie"],
-            "metric": {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                       "aggregate": "SUM", "label": "CA"},
+            "metric": {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                       "aggregate": "SUM", "label": "CA (milliers GNF)"},
             "adhoc_filters": [], "row_limit": 20,
+            "number_format": FMT_MILLIERS_GNF,
         },
     ))
 
@@ -272,9 +283,10 @@ def main():
         client, "Chiffre d'affaires par ville", ds_zone, "dist_bar",
         {
             "groupby": ["ville"],
-            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                         "aggregate": "SUM", "label": "CA"}],
+            "metrics": [{"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                         "aggregate": "SUM", "label": "CA (milliers GNF)"}],
             "adhoc_filters": [], "row_limit": 20,
+            "y_axis_format": FMT_MILLIERS_GNF,
         },
     ))
 
@@ -285,13 +297,16 @@ def main():
             "query_mode": "aggregate",
             "groupby": ["nom_magasin", "ville"],
             "metrics": [
-                {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires"},
-                 "aggregate": "SUM", "label": "CA"},
+                {"expressionType": "SIMPLE", "column": {"column_name": "chiffre_affaires_k_gnf"},
+                 "aggregate": "SUM", "label": "CA (milliers GNF)"},
                 {"expressionType": "SIMPLE", "column": {"column_name": "nb_commandes"},
                  "aggregate": "SUM", "label": "Nb commandes"},
             ],
             "adhoc_filters": [], "row_limit": 50,
-            "order_by_cols": ['["sum__chiffre_affaires", false]'],
+            "order_by_cols": ['["sum__chiffre_affaires_k_gnf", false]'],
+            "column_config": {
+                "CA (milliers GNF)": {"d3NumberFormat": FMT_MILLIERS_GNF},
+            },
         },
     ))
 
@@ -302,13 +317,17 @@ def main():
             "query_mode": "aggregate",
             "groupby": ["nom_commercial"],
             "metrics": [
-                {"expressionType": "SIMPLE", "column": {"column_name": "ca_realise"},
-                 "aggregate": "SUM", "label": "CA réalisé"},
-                {"expressionType": "SIMPLE", "column": {"column_name": "objectif_ca"},
-                 "aggregate": "SUM", "label": "Objectif CA"},
+                {"expressionType": "SIMPLE", "column": {"column_name": "ca_realise_k_gnf"},
+                 "aggregate": "SUM", "label": "CA réalisé (milliers GNF)"},
+                {"expressionType": "SIMPLE", "column": {"column_name": "objectif_ca_k_gnf"},
+                 "aggregate": "SUM", "label": "Objectif CA (milliers GNF)"},
             ],
             "adhoc_filters": [], "row_limit": 50,
-            "order_by_cols": ['["sum__ca_realise", false]'],
+            "order_by_cols": ['["sum__ca_realise_k_gnf", false]'],
+            "column_config": {
+                "CA réalisé (milliers GNF)": {"d3NumberFormat": FMT_MILLIERS_GNF},
+                "Objectif CA (milliers GNF)": {"d3NumberFormat": FMT_MILLIERS_GNF},
+            },
         },
     ))
 
@@ -319,13 +338,17 @@ def main():
             "query_mode": "aggregate",
             "groupby": ["nom_magasin"],
             "metrics": [
-                {"expressionType": "SIMPLE", "column": {"column_name": "objectif_ca"},
-                 "aggregate": "SUM", "label": "Objectif CA"},
-                {"expressionType": "SIMPLE", "column": {"column_name": "ca_realise"},
-                 "aggregate": "SUM", "label": "CA réalisé"},
+                {"expressionType": "SIMPLE", "column": {"column_name": "objectif_ca_k_gnf"},
+                 "aggregate": "SUM", "label": "Objectif CA (milliers GNF)"},
+                {"expressionType": "SIMPLE", "column": {"column_name": "ca_realise_k_gnf"},
+                 "aggregate": "SUM", "label": "CA réalisé (milliers GNF)"},
             ],
             "adhoc_filters": [], "row_limit": 50,
-            "order_by_cols": ['["sum__ca_realise", false]'],
+            "order_by_cols": ['["sum__ca_realise_k_gnf", false]'],
+            "column_config": {
+                "Objectif CA (milliers GNF)": {"d3NumberFormat": FMT_MILLIERS_GNF},
+                "CA réalisé (milliers GNF)": {"d3NumberFormat": FMT_MILLIERS_GNF},
+            },
         },
     ))
 
