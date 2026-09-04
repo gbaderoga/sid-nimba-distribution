@@ -2,11 +2,30 @@
 
 ## 1. Contexte retenu
 
-**Nimba Distribution** est une entreprise fictive de distribution d'électroménager et d'électronique, opérant un réseau de 8 magasins/agences en Guinée (Conakry, Kindia, Kankan, Nzérékoré, Boké et Labé). L'entreprise vend en magasin, en ligne et par téléphone, s'appuie sur une force de vente terrain (les commerciaux, rattachés à un magasin et évalués sur des objectifs mensuels), et gère un catalogue de plusieurs centaines de références.
+Nimba Distribution est une entreprise fictive spécialisée dans la distribution d'électroménager et de
+produits électroniques en Guinée. Elle dispose d'un réseau de 8 magasins et agences répartis dans
+plusieurs villes du pays, notamment Conakry, Kindia, Kankan, Nzérékoré, Boké et Labé.
 
-Ce contexte a été choisi car il couvre naturellement, sans artifice, l'ensemble des thématiques métier demandées : ventes, clients, produits, magasins, commerciaux, commandes, stocks et objectifs commerciaux. La présence de magasins dans plusieurs villes du pays permet en outre une analyse de performance par zone géographique réellement significative (et non un simple découpage arbitraire d'un seul site).
+L'entreprise commercialise plusieurs centaines de références à travers différents canaux de vente : en
+magasin, en ligne et par téléphone. Elle s'appuie également sur une force de vente composée de commerciaux
+rattachés à différents magasins et suivis à travers des objectifs commerciaux mensuels.
 
-Comme le sujet l'autorise explicitement, ce contexte est une proposition originale (inspirée d'une chaîne de distribution réelle mais entièrement fictive) plutôt qu'une reprise telle quelle de l'exemple du sujet — le principe (pilotage décisionnel d'une entreprise multi-sites) reste identique.
+Le développement de l'activité et la multiplicité des points de vente génèrent des données provenant de
+plusieurs domaines : ventes, clients, produits, magasins, commerciaux, commandes, stocks et objectifs
+commerciaux. Leur centralisation dans un Système d'Information Décisionnel (SID) permet de disposer d'une
+vision consolidée de l'activité et de faciliter l'analyse des performances.
+
+Ce contexte se prête ainsi particulièrement bien à la mise en place d'un entrepôt de données (Data
+Warehouse) permettant notamment d'analyser le chiffre d'affaires, les quantités vendues, les performances
+des magasins et des commerciaux, l'évolution des ventes dans le temps ainsi que l'atteinte des objectifs
+commerciaux.
+
+La présence de plusieurs magasins répartis dans différentes villes de Guinée permet également d'intégrer
+une véritable dimension géographique dans les analyses et de comparer les performances entre zones.
+
+Ce contexte constitue une proposition originale, inspirée du fonctionnement d'une entreprise de
+distribution multi-sites, mais entièrement fictive. Il respecte ainsi le principe du sujet tout en
+fournissant un cadre réaliste pour la conception et la mise en œuvre d'un système décisionnel complet.
 
 ## 2. Sources de données et formats
 
