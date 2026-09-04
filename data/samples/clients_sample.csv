@@ -1,21 +1,21 @@
 client_code,nom,prenom,email,telephone,date_inscription,segment,ville,region,pays
-CLI-000001,Lefebvre,Paulette,amartel@example.com,0534688937,2022-10-08,VIP,Kindia,Kindia,Guinée
-CLI-000002,Nguyen,Claire,perrieryves@example.net,03 20 72 98 06,2024-08-19,VIP,Kankan,Kankan,Guinée
-CLI-000003,Dupré,André,weissaurelie@example.org,03 29 04 65 37,2023-04-23,Particulier,Labé,Labé,Guinée
-CLI-000004,Samson,Alex,odette64@example.org,01 46 80 53 10,2025-06-11,VIP,Labé,Labé,Guinée
-CLI-000005,Hoarau,Luc,loiseauhonore@example.org,+33 6 61 93 74 52,2024-09-13,Professionnel,Labé,Labé,Guinée
-CLI-000006,Letellier,Michelle,merletherese@example.org,0245904966,2026-05-20,Particulier,Conakry,Conakry,Guinée
-CLI-000007,Philippe,Denis,francoisgrenier@example.com,+33 (0)1 72 58 65 18,2024-11-29,Particulier,Kindia,Kindia,Guinée
-CLI-000008,Richard,Claude,gcamus@example.com,0634262849,2025-09-18,Particulier,Nzérékoré,Nzérékoré,Guinée
-CLI-000009,Tanguy,Philippine,bturpin@example.net,0474314737,2024-07-10,Particulier,Kindia,Kindia,Guinée
-CLI-000010,Laroche,Alex,antoine75@example.org,03 62 54 54 94,2024-06-14,Particulier,Kankan,Kankan,Guinée
-CLI-000011,Blondel,Laurent,guillotmichelle@example.com,03 80 77 70 14,2022-10-12,Particulier,Labé,Labé,Guinée
-CLI-000012,Jacquot,Patrick,margaud95@example.com,0564855744,2022-12-06,Professionnel,Boké,Boké,Guinée
-CLI-000013,Mathieu,Michelle,thomasmathieu@example.net,+33 3 52 37 49 89,2023-02-02,Particulier,Kindia,Kindia,Guinée
-CLI-000014,Roussel,Victoire,theodoredumas@example.com,+33 4 58 08 24 00,2024-06-09,Professionnel,Labé,Labé,Guinée
-CLI-000015,Rocher,Gilbert,ahenry@example.net,0647752047,2022-03-30,Particulier,Nzérékoré,Nzérékoré,Guinée
-CLI-000016,François,Andrée,klegrand@example.net,+33 (0)2 85 29 41 31,2024-06-18,VIP,Nzérékoré,Nzérékoré,Guinée
-CLI-000017,Delattre,Julie,philippinebarbe@example.com,05 94 49 64 99,2021-12-22,Professionnel,Labé,Labé,Guinée
-CLI-000018,Rousset,Eugène,lorrainelecomte@example.com,+33 (0)2 97 32 81 20,2023-09-19,Particulier,Boké,Boké,Guinée
-CLI-000019,Lagarde,Jeannine,cklein@example.org,0434713493,2023-10-19,Particulier,Nzérékoré,Nzérékoré,Guinée
-CLI-000020,Devaux,Maurice,reneblanchard@example.org,+33 (0)3 20 49 94 71,2024-01-07,VIP,Labé,Labé,Guinée
+CLI-000001,Traoré,Amadou,amadou.traore1@yahoo.fr,+224 666 83 01 17,2021-10-08,Particulier,Kindia,Kindia,Guinée
+CLI-000002,Kanté,Mamady,mamady.kante2@yahoo.fr,+224 660 37 94 04,2026-01-28,Particulier,Labé,Labé,Guinée
+CLI-000003,Koné,Aboubacar,aboubacar.kone3@yahoo.fr,+224 623 23 75 47,2024-07-20,Particulier,Kankan,Kankan,Guinée
+CLI-000004,Soumah,Hadja,hadja.soumah4@outlook.com,+224 667 92 66 07,2024-01-22,VIP,Conakry,Conakry,Guinée
+CLI-000005,Baldé,Sia,sia.balde5@outlook.com,+224 656 16 17 45,2026-05-22,Particulier,Labé,Labé,Guinée
+CLI-000006,Doumbouya,Yaya,yaya.doumbouya6@gmail.com,+224 656 38 19 95,2023-03-02,Particulier,Labé,Labé,Guinée
+CLI-000007,Touré,Kumba,kumba.toure7@outlook.com,+224 623 32 45 00,2023-08-16,Professionnel,Boké,Boké,Guinée
+CLI-000008,Haba,Kumba,kumba.haba8@yahoo.fr,+224 656 52 73 35,2026-02-18,VIP,Kankan,Kankan,Guinée
+CLI-000009,Baldé,Sidiki,sidiki.balde9@yahoo.fr,+224 620 67 23 24,2025-11-07,Professionnel,Kindia,Kindia,Guinée
+CLI-000010,Sagno,Souleymane,souleymane.sagno10@outlook.com,+224 621 29 89 10,2024-05-13,Particulier,Boké,Boké,Guinée
+CLI-000011,Baldé,Oumou,oumou.balde11@yahoo.fr,+224 621 99 23 86,2025-05-07,Particulier,Kankan,Kankan,Guinée
+CLI-000012,Barry,Bangaly,bangaly.barry12@yahoo.fr,+224 660 39 21 27,2025-09-03,Particulier,Kankan,Kankan,Guinée
+CLI-000013,Diallo,Hawa,hawa.diallo13@yahoo.fr,+224 621 87 99 40,2026-03-01,Particulier,Conakry,Conakry,Guinée
+CLI-000014,Tolno,Amadou,amadou.tolno14@yahoo.fr,+224 667 87 14 82,2024-02-11,Particulier,Kindia,Kindia,Guinée
+CLI-000015,Diallo,Sékou,sekou.diallo15@yahoo.fr,+224 623 87 55 22,2023-01-14,Particulier,Nzérékoré,Nzérékoré,Guinée
+CLI-000016,Cissé,Hawa,hawa.cisse16@gmail.com,+224 620 25 00 21,2024-02-07,Professionnel,Conakry,Conakry,Guinée
+CLI-000017,Diakité,Facinet,facinet.diakite17@outlook.com,+224 620 66 26 52,2023-08-14,VIP,Conakry,Conakry,Guinée
+CLI-000018,Sylla,Amadou,amadou.sylla18@gmail.com,+224 664 36 99 54,2025-01-07,Particulier,Labé,Labé,Guinée
+CLI-000019,Kourouma,Mory,mory.kourouma19@gmail.com,+224 660 57 05 11,2025-08-31,VIP,Kindia,Kindia,Guinée
+CLI-000020,Sissoko,Mariama,mariama.sissoko20@yahoo.fr,+224 655 26 59 71,2025-04-18,Particulier,Nzérékoré,Nzérékoré,Guinée
