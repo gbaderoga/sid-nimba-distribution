@@ -191,11 +191,14 @@ def generate_commerciaux(magasins: pd.DataFrame, n_per_store: int = 2) -> pd.Dat
     i = 1
     for _, mag in magasins.iterrows():
         for _ in range(random.randint(1, n_per_store)):
+            prenom, nom = generate_nom_prenom()
+            # suffixe numérique (i) pour garantir l'unicité même en cas d'homonymie
+            email = f"{_strip_accents(prenom).lower()}.{_strip_accents(nom).lower()}{i}@{random.choice(DOMAINES_EMAIL)}"
             rows.append({
                 "matricule": f"COM-{i:04d}",
-                "nom": fake.last_name(),
-                "prenom": fake.first_name(),
-                "email": fake.unique.email(),
+                "nom": nom,
+                "prenom": prenom,
+                "email": email,
                 "magasin_id": mag["magasin_id"],
                 "date_embauche": fake.date_between(start_date="-5y", end_date="-3m").isoformat(),
                 "statut": "actif" if random.random() > 0.05 else "inactif",
