@@ -59,6 +59,35 @@ MARQUES = ["Samsung", "LG", "Hisense", "Nasco", "Bosch", "Philips", "TCL", "Sony
 
 SEGMENTS_CLIENT = ["Particulier", "Particulier", "Particulier", "Professionnel", "VIP"]
 
+# ----------------------------------------------------------------------------
+# Référentiel de prénoms et noms de famille courants en Guinée, représentatifs
+# des principaux groupes (peul, malinké, soussou notamment). Utilisé à la
+# place des générateurs Faker génériques (fr_FR) pour des clients/commerciaux
+# au profil réaliste pour le contexte du projet.
+# ----------------------------------------------------------------------------
+PRENOMS_GUINEENS = {
+    "H": [
+        "Mamadou", "Ibrahima", "Sékou", "Alpha", "Ousmane", "Mohamed", "Aboubacar", "Boubacar",
+        "Fodé", "Amadou", "Thierno", "Alseny", "Sory", "Bangaly", "Kékoura", "Facinet",
+        "Mory", "Lansana", "Kabinet", "Sidiki", "Mamady", "Elhadj", "Souleymane", "Yaya",
+    ],
+    "F": [
+        "Aissatou", "Mariama", "Fatoumata", "Hadja", "Kadiatou", "Aminata", "Djénabou",
+        "Hawa", "Rougui", "Néné", "Saran", "Kadé", "Djéné", "Binta", "Kumba",
+        "Fanta", "Oumou", "Mabinty", "Mariame", "Sia", "Djélika", "Kesso", "Ramatoulaye",
+    ],
+}
+
+NOMS_GUINEENS = [
+    "Diallo", "Barry", "Bah", "Sow", "Baldé", "Camara", "Condé", "Touré", "Keïta", "Cissé",
+    "Koné", "Kourouma", "Kaba", "Sylla", "Doumbouya", "Fofana", "Soumah", "Traoré", "Bangoura",
+    "Diakité", "Sissoko", "Kanté", "Konaté", "Loua", "Haba", "Kolié", "Tolno", "Sagno",
+]
+
+# Préfixes mobiles guinéens (indicatif pays +224) : Orange, MTN et Cellcom se
+# partagent des blocs commençant par 6.
+PREFIXES_TEL_GUINEE = ["620", "621", "622", "623", "628", "655", "656", "657", "660", "664", "666", "667"]
+
 random.seed(42)
 np.random.seed(42)
 
@@ -69,6 +98,21 @@ def _strip_accents(s: str) -> str:
 
 def slugify_store_id(pays: str, ville: str, idx: int) -> str:
     return f"MAG-{_strip_accents(pays)[:2].upper()}-{_strip_accents(ville)[:3].upper()}-{idx:02d}"
+
+
+def generate_nom_prenom() -> tuple[str, str]:
+    """Tire un (prénom, nom) plausible pour la Guinée, indépendamment du genre."""
+    genre = random.choice(["H", "F"])
+    prenom = random.choice(PRENOMS_GUINEENS[genre])
+    nom = random.choice(NOMS_GUINEENS)
+    return prenom, nom
+
+
+def generate_telephone_guineen() -> str:
+    """Génère un numéro mobile guinéen plausible, format +224 6XX XX XX XX."""
+    prefixe = random.choice(PREFIXES_TEL_GUINEE)
+    reste = f"{random.randint(0, 999999):06d}"
+    return f"+224 {prefixe} {reste[0:2]} {reste[2:4]} {reste[4:6]}"
 
 
 def generate_magasins() -> pd.DataFrame:
@@ -116,17 +160,23 @@ def generate_produits(n: int) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+DOMAINES_EMAIL = ["gmail.com", "yahoo.fr", "outlook.com"]
+
+
 def generate_clients(n: int) -> pd.DataFrame:
     rows = []
     for i in range(1, n + 1):
         pays = random.choice(list(GEOGRAPHIE.keys()))
         ville = random.choice(list(GEOGRAPHIE[pays].keys()))
+        prenom, nom = generate_nom_prenom()
+        # suffixe numérique (i) pour garantir l'unicité même en cas d'homonymie
+        email = f"{_strip_accents(prenom).lower()}.{_strip_accents(nom).lower()}{i}@{random.choice(DOMAINES_EMAIL)}"
         rows.append({
             "client_code": f"CLI-{i:06d}",
-            "nom": fake.last_name(),
-            "prenom": fake.first_name(),
-            "email": fake.unique.email(),
-            "telephone": fake.phone_number(),
+            "nom": nom,
+            "prenom": prenom,
+            "email": email,
+            "telephone": generate_telephone_guineen(),
             "date_inscription": fake.date_between(start_date="-5y", end_date="today").isoformat(),
             "segment": random.choice(SEGMENTS_CLIENT),
             "ville": ville,
