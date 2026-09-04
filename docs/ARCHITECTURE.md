@@ -65,39 +65,6 @@ flowchart LR
 
 *(dim_client et dim_produit sont gérées en SCD Type 2 ; dim_magasin, dim_commercial et dim_canal_vente en SCD Type 1 — voir `docs/MODELE_DIMENSIONNEL.md`.)*
 
-## Déploiement (Docker Compose)
-
-```mermaid
-flowchart TB
-    subgraph HOST["Machine hôte (docker compose up)"]
-        subgraph NET["Réseau Docker sid-nimba-distribution"]
-            PG["postgres:16\n(port 5432)\nerp_source / dwh / airflow / superset"]
-            AWI["airflow-init\n(migration + admin, one-shot)"]
-            AWW["airflow-webserver\n(port 8080)"]
-            AWS["airflow-scheduler"]
-            SS["superset\n(port 8088)"]
-            SP["superset-provision\n(one-shot : datasets + charts + dashboard)"]
-            ET["etl-tools\n(profil 'tools' : génération de données,\nexécution manuelle du pipeline)"]
-        end
-        VOL1[("volume pgdata")]
-        VOL2[("volume airflow_logs")]
-        VOL3[("volume superset_home")]
-    end
-
-    PG --> VOL1
-    AWS --> VOL2
-    SS --> VOL3
-    AWI --> PG
-    AWW --> PG
-    AWS --> PG
-    SS --> PG
-    SP -->|API REST| SS
-    ET --> PG
-
-    UTIL["Utilisateur"] -->|:8080 - pilotage ETL| AWW
-    UTIL -->|:8088 - tableaux de bord| SS
-```
-
 ## Composants et rôles
 
 | Composant | Rôle | Technologie |
