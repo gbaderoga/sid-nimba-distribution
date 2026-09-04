@@ -6,7 +6,7 @@ Système d'Information Décisionnel complet, reposant sur un Data Warehouse Post
 
 ## Aperçu du tableau de bord
 
-![Tableau de bord Superset](docs/img/dashboard_superset.png)
+![Tableau de bord Superset](docs/img/dashboard_superset.jpg)
 
 ## Stack technique
 
