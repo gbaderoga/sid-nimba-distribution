@@ -1,6 +1,6 @@
 # Nimba Distribution — Système d'Information Décisionnel
 
-Système d'Information Décisionnel complet, reposant sur un Data Warehouse PostgreSQL, pour une entreprise fictive de distribution (**Nimba Distribution**, réseau de 8 magasins/agences en Guinée).
+Système d'Information Décisionnel complet, reposant sur un Data Warehouse PostgreSQL, pour une entreprise fictive de distribution (**Nimba Distribution**, réseau de 8 magasins en Guinée).
 
 > Documentation complète : [`docs/RAPPORT_SYNTHESE.md`](docs/RAPPORT_SYNTHESE.md) (contexte et choix), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (schéma d'architecture) et [`docs/MODELE_DIMENSIONNEL.md`](docs/MODELE_DIMENSIONNEL.md) (modèle en étoile détaillé).
 
@@ -81,29 +81,7 @@ Accès aux interfaces :
 - **Airflow** : http://localhost:8080 (identifiants définis dans `.env`, `admin`/`admin` par défaut)
 - **Superset** : http://localhost:8088 (identifiants définis dans `.env`, `admin`/`admin` par défaut)
 
-Le service `superset-provision` crée automatiquement, au premier démarrage, la connexion à la base `dwh`, les 7 datasets et les 10 graphiques du tableau de bord **"Nimba Distribution - Pilotage commercial"** (rejouable sans créer de doublons). Un export statique de ce tableau de bord est également fourni dans `dashboard/assets/sid_nimba_distribution_export.zip`, importable manuellement depuis l'UI Superset (*Settings > Import dashboards*) si vous préférez ne pas exécuter le script de provisioning.
-
 Pour arrêter la stack : `docker compose down` (ajouter `-v` pour supprimer aussi les volumes de données).
-
-## Exécution en local, sans Docker (développement / débogage)
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-
-# Base PostgreSQL locale (adapter selon votre installation), puis appliquer les schémas :
-psql -h localhost -U postgres -d erp_source -f sql/01_source_erp/01_schema_erp.sql
-psql -h localhost -U postgres -d dwh -f sql/02_staging/01_schema_staging.sql
-psql -h localhost -U postgres -d dwh -f sql/03_dwh/01_schema_dwh.sql
-psql -h localhost -U postgres -d dwh -f sql/03_dwh/02_seed_dim_date.sql
-psql -h localhost -U postgres -d dwh -f sql/03_dwh/03_seed_membres_inconnus.sql
-psql -h localhost -U postgres -d dwh -f sql/04_views/01_vues_restitution.sql
-
-cp .env.example .env   # puis ajuster POSTGRES_HOST=localhost (ou 127.0.0.1)
-
-python3 data/scripts/generate_sample_data.py
-python3 -m etl.run_pipeline --step all
-```
 
 ## Indicateurs restitués
 
@@ -135,4 +113,5 @@ Les fichiers sources complets (`data/raw/`) sont générés par `data/scripts/ge
 
 ## Auteur
 
-Projet réalisé par kpamou dans le cadre d'un exercice de conception et mise en œuvre d'un Système d'Information Décisionnel.
+Projet réalisé par M. Cécé Kpamou dans le cadre d’un exercice académique portant sur la conception et la
+mise en œuvre d’un Système d’Information Décisionnel (SID).
