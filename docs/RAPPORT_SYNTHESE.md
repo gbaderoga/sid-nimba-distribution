@@ -1,4 +1,4 @@
-# Rapport de synthèse — Système d'Information Décisionnel Nimba Distribution
+# Rapport de synthèse - Système d'Information Décisionnel Nimba Distribution
 
 ## 1. Contexte retenu
 
@@ -33,7 +33,7 @@ Le SID s'alimente à partir de quatre sources hétérogènes, représentatives d
 
 | Source | Format | Contenu | Justification du choix de format |
 |---|---|---|---|
-| `clients.csv` | CSV | Référentiel clients (export CRM) | Le CSV est le format d'échange le plus courant pour un export périodique d'un outil tiers (CRM SaaS, par exemple) |
+| `clients.csv` | CSV | Référentiel clients (export CRM) | Le CSV est le format d'échange le plus courant pour un export périodique d'un outil tiers (CRM, par exemple) |
 | `produits.xlsx` | Excel | Catalogue produits (prix, coût, catégorie) | Le catalogue est en pratique souvent maintenu à la main par l'équipe merchandising dans un classeur Excel |
 | `objectifs.xlsx` | Excel | Objectifs commerciaux mensuels par commercial | Document de pilotage RH/direction commerciale, typiquement un tableur |
 | `magasins.json` | JSON | Référentiel des magasins/agences (géolocalisation) | Format naturel pour un export d'une application de gestion de sites (API interne, outil de facilities management) |
@@ -107,6 +107,20 @@ Le `docker-compose.yml` et les `Dockerfile` associés ont été validés structu
 
 ## 6. Limites et pistes d'amélioration
 
-- La détection de changement SCD2 est basée sur une empreinte de tous les attributs suivis ; une évolution possible serait de ne déclencher une nouvelle version que sur un sous-ensemble d'attributs "sensibles".
-- La volumétrie du jeu de données (~15 100 lignes de vente) reste modeste ; l'architecture (index, vues, staging) est conçue pour scaler à des volumes bien supérieurs sans changement structurel.
-- Un `docker-compose.override.yml` de production ajouterait un reverse-proxy TLS, une politique de sauvegarde automatisée de `pgdata`, et remplacerait le `LocalExecutor` d'Airflow par du `CeleryExecutor` pour la scalabilité horizontale.
+Le système développé répond aux objectifs du projet, mais certaines améliorations pourraient être
+envisagées pour renforcer sa robustesse et préparer son utilisation à plus grande échelle.
+
+-Premièrement, la gestion de l'historique des dimensions avec le mécanisme SCD Type 2 repose actuellement
+sur la détection des modifications de l'ensemble des attributs suivis. Une amélioration consisterait à
+limiter cette détection aux attributs réellement importants à historiser, afin d'éviter la création de
+versions inutiles.
+
+-Deuxièmement, le jeu de données utilisé reste relativement limité, avec environ 15 100 lignes de ventes.
+Des tests sur des volumes beaucoup plus importants permettraient de mieux évaluer les performances et la
+capacité de montée en charge du système. Néanmoins, l'utilisation de tables de staging, d'index et de vues
+constitue une base adaptée à l'évolution du volume des données.
+
+-Enfin, l'environnement Docker Compose actuel est principalement adapté au développement et à la
+démonstration. Un passage en production nécessiterait notamment de renforcer la sécurité des accès avec
+HTTPS, d'automatiser les sauvegardes de PostgreSQL et, si la charge de traitement augmente, de faire
+évoluer Airflow vers une architecture distribuée capable d'exécuter les traitements sur plusieurs workers.
