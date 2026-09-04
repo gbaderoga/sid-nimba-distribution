@@ -1,0 +1,100 @@
+{
+  "magasins": [
+    {
+      "magasin_id": "MAG-GU-CON-01",
+      "nom_magasin": "Nimba Distribution Conakry 1",
+      "type_magasin": "boutique",
+      "adresse": "1, chemin de Moulin",
+      "ville": "Conakry",
+      "region": "Conakry",
+      "pays": "Guinée",
+      "latitude": 9.625653,
+      "longitude": -13.568738,
+      "date_ouverture": "2021-10-15"
+    },
+    {
+      "magasin_id": "MAG-GU-CON-02",
+      "nom_magasin": "Nimba Distribution Conakry 2",
+      "type_magasin": "agence",
+      "adresse": "9, boulevard Briand",
+      "ville": "Conakry",
+      "region": "Conakry",
+      "pays": "Guinée",
+      "latitude": 9.630128,
+      "longitude": -13.568941,
+      "date_ouverture": "2020-10-31"
+    },
+    {
+      "magasin_id": "MAG-GU-CON-03",
+      "nom_magasin": "Nimba Distribution Conakry 3",
+      "type_magasin": "boutique",
+      "adresse": "rue Bodin",
+      "ville": "Conakry",
+      "region": "Conakry",
+      "pays": "Guinée",
+      "latitude": 9.650827,
+      "longitude": -13.576585,
+      "date_ouverture": "2023-09-07"
+    },
+    {
+      "magasin_id": "MAG-GU-KIN-01",
+      "nom_magasin": "Nimba Distribution Kindia 1",
+      "type_magasin": "boutique",
+      "adresse": "78, avenue Pruvost",
+      "ville": "Kindia",
+      "region": "Kindia",
+      "pays": "Guinée",
+      "latitude": 10.053777,
+      "longitude": -12.884608,
+      "date_ouverture": "2022-01-23"
+    },
+    {
+      "magasin_id": "MAG-GU-KAN-01",
+      "nom_magasin": "Nimba Distribution Kankan 1",
+      "type_magasin": "agence",
+      "adresse": "avenue Leblanc",
+      "ville": "Kankan",
+      "region": "Kankan",
+      "pays": "Guinée",
+      "latitude": 10.374606,
+      "longitude": -9.301619,
+      "date_ouverture": "2022-01-23"
+    },
+    {
+      "magasin_id": "MAG-GU-NZE-01",
+      "nom_magasin": "Nimba Distribution Nzérékoré 1",
+      "type_magasin": "boutique",
+      "adresse": "21, rue Agathe Barre",
+      "ville": "Nzérékoré",
+      "region": "Nzérékoré",
+      "pays": "Guinée",
+      "latitude": 7.744554,
+      "longitude": -8.811905,
+      "date_ouverture": "2023-09-10"
+    },
+    {
+      "magasin_id": "MAG-GU-BOK-01",
+      "nom_magasin": "Nimba Distribution Boké 1",
+      "type_magasin": "boutique",
+      "adresse": "avenue de Regnier",
+      "ville": "Boké",
+      "region": "Boké",
+      "pays": "Guinée",
+      "latitude": 10.936881,
+      "longitude": -14.298032,
+      "date_ouverture": "2021-04-18"
+    },
+    {
+      "magasin_id": "MAG-GU-LAB-01",
+      "nom_magasin": "Nimba Distribution Labé 1",
+      "type_magasin": "agence",
+      "adresse": "9, boulevard Agnès Verdier",
+      "ville": "Labé",
+      "region": "Labé",
+      "pays": "Guinée",
+      "latitude": 11.330577,
+      "longitude": -12.30284,
+      "date_ouverture": "2021-08-20"
+    }
+  ]
+}

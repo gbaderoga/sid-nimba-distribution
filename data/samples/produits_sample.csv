@@ -1,0 +1,21 @@
+produit_id,nom_produit,categorie,sous_categorie,marque,prix_unitaire,cout_unitaire,date_maj
+PRD-00001,Climatiseur Philips Blanc,Électroménager,Climatiseurs,LG,337.57,282.1,2024-10-06
+PRD-00002,Climatiseur Ramtons Ensemble,Électroménager,Climatiseurs,Bosch,127.67,90.92,2026-03-22
+PRD-00003,Climatiseur TCL Cabinet,Électroménager,Climatiseurs,LG,628.6,435.94,2026-05-21
+PRD-00004,Fers à repasser Philips Chant,Petit électroménager,Fers à repasser,Ramtons,889.59,666.08,2025-06-07
+PRD-00005,Réfrigérateur Bosch Partie,Électroménager,Réfrigérateurs,LG,62.1,50.97,2025-12-11
+PRD-00006,Réfrigérateur Philips Longtemps,Électroménager,Réfrigérateurs,Hisense,403.04,313.4,2024-12-30
+PRD-00007,Ordinateur LG Lettre,Électronique,Ordinateurs,Ramtons,220.75,179.46,2025-02-03
+PRD-00008,Bouilloire Sony Faveur,Petit électroménager,Bouilloires,TCL,531.34,434.3,2026-01-29
+PRD-00009,Audio Samsung Vaincre,Électronique,Audio,Nasco,233.74,187.4,2025-12-20
+PRD-00010,Machines à laver Ramtons Si,Électroménager,Machines à laver,Philips,385.95,329.91,2025-12-11
+PRD-00011,Climatiseur Sony Quitter,Électroménager,Climatiseurs,Hisense,463.73,325.57,2026-02-17
+PRD-00012,Téléphone Bosch Découvrir,Électronique,Téléphones,Ramtons,275.02,208.6,2025-08-06
+PRD-00013,Audio Hisense Fête,Électronique,Audio,Binatone,399.43,328.53,2026-08-27
+PRD-00014,Téléviseur Hisense Supposer,Électronique,Téléviseurs,Hisense,856.67,608.29,2026-01-19
+PRD-00015,Ventilateur Ramtons Emporter,Petit électroménager,Ventilateurs,Sony,611.43,483.18,2026-01-16
+PRD-00016,Fers à repasser Samsung Avec,Petit électroménager,Fers à repasser,LG,1094.62,777.3,2025-02-17
+PRD-00017,Fers à repasser Bosch Appuyer,Petit électroménager,Fers à repasser,TCL,774.21,618.35,2026-04-14
+PRD-00018,Climatiseur Bosch Mode,Électroménager,Climatiseurs,Binatone,23.98,17.55,2025-03-17
+PRD-00019,Cuisinière Bosch Écrire,Électroménager,Cuisinières,Binatone,1032.13,731.41,2026-07-02
+PRD-00020,Bouilloire Binatone Rester,Petit électroménager,Bouilloires,Binatone,186.1,134.98,2026-06-05

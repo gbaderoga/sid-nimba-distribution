@@ -1,0 +1,10 @@
+# Dépendances additionnelles installées par-dessus l'image officielle apache/airflow.
+# Volontairement non-pinnées : le Dockerfile installe ce fichier avec le
+# fichier de contraintes officiel Airflow (voir docker/airflow/Dockerfile),
+# qui fixe déjà les versions compatibles de pandas/numpy/requests/psycopg2.
+apache-airflow-providers-postgres
+pandas
+openpyxl
+Faker
+python-dotenv
+requests
